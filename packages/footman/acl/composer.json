@@ -1,0 +1,17 @@
+{
+    "name": "footman/acl",
+    "description": "access control level",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "Footman\\Acl\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ahmad montazeri",
+            "email": "amontazeri53@gmail.com"
+        }
+    ],
+    "require": {}
+}
