@@ -26,4 +26,10 @@ class Role extends Model
     {
         $this->permissions()->sync($permissions);
     }
+
+    public function getPermissions()
+    {
+        // dd($this->permissions->get());
+        return $this->permissions;
+    }
 }
