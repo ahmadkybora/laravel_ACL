@@ -15,9 +15,11 @@ class HomeController extends Controller
         // $role->givPermissionTo($permissions);
 
         $role = Role::find(1);
-
+        $permission = Permission::find(1);
+        // $role = Role::getAllRoles();
         return response()->json([
-            'data' => $role->getPermissions(),
+            // 'data' => $role->getPermissions(),
+            'data' =>         $permission->getRoles(),
             'message' => true,
         ]);
         // return response()->json([
