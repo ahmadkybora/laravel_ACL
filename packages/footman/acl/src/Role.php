@@ -2,6 +2,7 @@
 
 namespace Footman\Acl;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,12 @@ class Role extends Model
 
     public function permissions()
     {
-        return self::belongsToMany(Permission::class);
+        return $this->belongsToMany(Permission::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 
     protected function nonStaticGetAllRoles()
@@ -26,13 +32,13 @@ class Role extends Model
         return Role::all();
     }
 
-    public function nonStaticGetPermissionTo($permissions)
+    public function nonStaticGivePermissionTo($permissions)
     {
         $this->permissions()->sync($permissions);
         return $this;
     }
 
-    public static function staticGetPermissionTo($permissions)
+    public static function staticGivePermissionTo($permissions)
     {
         self::permissions()->sync($permissions);
         return new self;
@@ -50,6 +56,30 @@ class Role extends Model
         return new self;
     }
 
+    public function nonStaticRemovePermission($permission)
+    {
+        $this->permissions()->detach($permission->id);
+        return $this;
+    }
+
+    public static function staticRemovePermission($permission)
+    {
+        self::permissions()->detach($permission->id);
+        return new self;
+    }
+
+    public function nonStaticAssignRole($user)
+    {
+        $this->users()->attach($user->id);
+        return $this;
+    }
+
+    public static function staticAssignRole($user)
+    {
+        self::users()->atach($user->id);
+        return new self;
+    }
+
     public function __call($method, $parameters)
     {
         switch ($method)
@@ -58,12 +88,20 @@ class Role extends Model
                 return call_user_func([$this, 'nonStaticGetAllRoles'], $parameters[0] ?? null, $parameters[1] ?? null);
             break;
 
-            case 'getPermissionTo':
-                return call_user_func([$this, 'nonStaticGetPermissionTo'], $parameters[0] ?? null, $parameters[1] ?? null);
+            case 'givePermissionTo':
+                return call_user_func([$this, 'nonStaticGivePermissionTo'], $parameters[0] ?? null, $parameters[1] ?? null);
             break;
 
             case 'getPermissions':
                 return call_user_func([$this, 'nonStaticGetPermissions'], $parameters[0] ?? null, $parameters[1] ?? null);
+            break;
+
+            case 'removePermission':
+                return call_user_func([$this, 'nonStaticRemovePermission'], $parameters[0] ?? null);
+            break;
+
+            case 'assignRole':
+                return call_user_func([$this, 'nonstaticAssignRole'], $parameters[0] ?? null);
             break;
         }
 
@@ -78,12 +116,20 @@ class Role extends Model
                 return call_user_func([new self, 'staticGetAllRoles'], $parameters[0] ?? null);
             break;
 
-            case 'givPermissionTo':
+            case 'givePermissionTo':
                 return call_user_func([new self, 'staticGivePermissionTo'], $parameters[0] ?? null);
             break;
 
             case 'getPermissions':
                 return call_user_func([new self, 'staticGetPermissions'], $parameters[0] ?? null);
+            break;
+
+            case 'removePermission':
+                return call_user_func([new self, 'staticRemovePermission'], $parameters[0] ?? null);
+            break;
+
+            case 'assignRole':
+                return call_user_func([new self, 'staticAssignRole'], $parameters[0] ?? null);
             break;
         }
 

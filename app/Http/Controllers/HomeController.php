@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Footman\Acl\Permission;
 use Illuminate\Http\Request;
 use Footman\Acl\Role;
@@ -16,10 +17,16 @@ class HomeController extends Controller
 
         $role = Role::find(1);
         $permission = Permission::find(1);
+        $user = User::find(1);
+        
+        $role->assignRole($user);
+
+        // $role->getAllRoles();
+        // $permission = Permission::find(1);
         // $role = Role::getAllRoles();
         return response()->json([
             // 'data' => $role->getPermissions(),
-            'data' =>         $permission->getRoles(),
+            'data' => $role,
             'message' => true,
         ]);
         // return response()->json([

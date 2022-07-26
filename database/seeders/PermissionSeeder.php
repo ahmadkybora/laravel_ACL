@@ -43,7 +43,7 @@ class PermissionSeeder extends Seeder
 
         $permissions = Permission::getAllPermissions();
         $role = Role::find(1);
-        $role->givPermissionTo($permissions);
+        $role->givePermissionTo($permissions);
         $role->save();
     }
 }

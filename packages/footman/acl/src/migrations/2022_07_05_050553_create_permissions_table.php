@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Footman\Acl\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -40,9 +41,21 @@ class CreatePermissionsTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('role_user', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('role_id');
+            $table->unsignedInteger('user_id');
+            $table->timestamps();
+        });
+
         $role = new Role();
         $role->name = "SUPER ADMIN";
         $role->save();
+
+        $user = new User();
+        $user->username = "admin";
+        $user->password = "12345678";
+        $user->save();
     }
 
     /**
